@@ -9,7 +9,9 @@ instance Show Expr where
   show (EAdd e1 e2)   = "(" ++ show e1 ++ " + " ++ show e2 ++ ")"
 
 eval :: Expr -> Int
-eval =
+eval exp = case exp of
+  EConstNum n -> n
+  EAdd e1 e2 -> eval e1 + eval e2
 
 ejemplo1:: Expr
 ejemplo1 =
