@@ -30,7 +30,29 @@ sumaAlt :: [Int] -> Int
 sumaAlt = foldr (-) 0
 
 --V
--- sumaAltInv :: [Int] -> Int
--- sumaAltInv = foldl (-) 0
+sumaAltInv :: [Int] -> Int
+sumaAltInv xs = foldr (-) 0 (reverse xs)
+
+-- Es cierto que funciona, porque empezamos con la lista invertida. Pero quiza
+-- Esto es lo que se quería ver:
+
+sumaAltInv2 :: [Int] -> Int
+sumaAltInv2 = foldl (flip (-)) 0
+
+{-
+sumaAltInv2 [2,5,1] = flip (-) (flip (-) (flip (-) 0 2) 5) 1
+sumaAltInv2 [2,5,1] = flip (-) (flip (-) (2 - 0) 5) 1
+sumaAltInv2 [2,5,1] = flip (-) (flip (-) 2 5) 1
+sumaAltInv2 [2,5,1] = flip (-) (5 - 2) 1
+sumaAltInv2 [2,5,1] = 1 - 5 + 2
+
+-- El último, menos el anteúltimo...
+
+foldl une el caso base con el primer elemento, foldr lo une con el ultimo.
+-}
+
 
 -- Ejercicio 4
+--I
+
+--permutaciones :: [a] -> [[a]]
