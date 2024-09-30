@@ -55,4 +55,50 @@ foldl une el caso base con el primer elemento, foldr lo une con el ultimo.
 -- Ejercicio 4
 --I
 
---permutaciones :: [a] -> [[a]]
+-- permutaciones :: [a] -> [[a]]
+-- permutaciones [] = [[]]
+-- permutaciones xs = concatMap (\ls -> map () )
+
+permutaciones :: [a] -> [[a]]
+permutaciones = foldr (\x rs -> concatMap (\r -> map (insert x r) [0.. length r]) rs) [[]]
+    where insert x r i = take i r ++ [x] ++ drop i r
+
+
+-- Ejercicio 5
+
+{-
+elementosEnPosicionesPares no es recursión estructural porque estamos accediendo
+a la cola de la lista, algo que no se puede hacer
+
+entrelazar si es recursión estructural porque accedemos a otra lista, lo cual si está permitido.
+-}
+
+entrelazar :: [a] -> [a] -> [a]
+entrelazar xs ys = foldr (\x rec ys -> if null ys then x : (rec []) else x : head ys : (rec (tail ys))) (const []) xs ys
+--La clave acá es comprender que rec puede ser una función, en este caso lo es, y el parametro que recibe es una lista
+
+-- Ejercicio 6
+
+recr :: (a -> [a] -> b -> b) -> b -> [a] -> b
+recr _ z [] = z
+recr f z (x : xs) = f x xs (recr f z xs)
+
+--I
+
+sacarUna :: Eq a => a -> [a] -> [a]
+sacarUna e = recr (\x xs rec -> if e == x then xs else x:rec) []
+
+--II
+
+{-
+No es adecuado el esquema de recursión estructural porque acá necesitamos detener la recursión
+antes de llegar al caso base, eso ocurre cuando encontramos el elemento que queremos borrar
+y para no tenerlo en cuenta, devolvemos el resto de la lista sin retornar por "rec" el cual
+es la parte que continua la recursión
+-}
+
+-- III
+
+insertarOrdenado :: Ord a => a -> [a] -> [a]
+insertarOrdenado a = recr (\x xs rec -> if a <= x then a:x:xs else if a >= x && cheqHead xs then x:a:xs else x:rec) []
+    where cheqHead xs = null xs || a <= head xs
