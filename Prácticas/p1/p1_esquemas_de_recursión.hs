@@ -102,3 +102,26 @@ es la parte que continua la recursión
 insertarOrdenado :: Ord a => a -> [a] -> [a]
 insertarOrdenado a = recr (\x xs rec -> if a <= x then a:x:xs else if a >= x && cheqHead xs then x:a:xs else x:rec) []
     where cheqHead xs = null xs || a <= head xs
+
+-- Ejercicio 8
+--I
+-- mapPares :: ((a,b) -> c) -> [(a,b)] -> [c]
+-- mapPares f = map f
+-- Ahí lo entendí, no es que la función está currificada, es que
+-- los dos argumentos que recibe estan currificados, la función debería
+-- poder ser una función normal, pero de alguna forma debe resolver recibir
+-- un par como argumento. Ahí entra uncurry.
+mapPares :: (a -> b -> c) -> [(a,b)] -> [c]
+mapPares f = map (uncurry f)
+
+--II
+armarPares :: [a] -> [b] -> [(a,b)]
+armarPares = foldr (\x rec ys -> if null ys then [] else (x, head ys):rec (tail ys)) (const [])
+
+--III
+mapDoble :: (a -> b -> c) -> [a] -> [b] -> [c]
+mapDoble f = foldr (\x rec ys -> (f x (head ys)):rec (tail ys)) (const [])
+-- Si la primera lista es mas grande que la segunda, se rompe, pero como dice que
+-- las dos listas son de igual longitud, para el caso especificado funciona.
+
+
