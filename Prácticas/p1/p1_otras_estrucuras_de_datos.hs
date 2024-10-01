@@ -103,10 +103,36 @@ cantNodos = foldAB (\ri r rd -> 1 + ri + rd) 0
 -- III
 
 mejorSegún :: (a -> a -> Bool) -> AB a -> a
-mejorSegún f = foldAB (\ri r rd -> if (f (cmp (f) ri r) (cmp (f) rd r)) then (cmp f ri r) else (cmp f rd r))
+mejorSegún f (Bin i r d) = foldAB (\ri r rd -> cmp (cmp r rd) ri) r (Bin i r d)
+    where cmp x y = if f x y then x else y
 
+-- cmp :: (a -> a -> Bool) -> AB a -> a -> a
+-- cmp f arb e = case arb of
+--                 Nil -> e
+--                 Bin i r d -> if f r e then r else e
 
-cmp :: (a -> a -> Bool) -> AB a -> a -> a
-cmp f arb e = case arb of
-                Nil -> e
-                Bin i r d -> if f r e then r else e
+-- No comprendo por qué dice que el resultado de la recursión de un arbol puede ser o no Nil.
+
+-- IV
+
+esABB :: Ord a => AB a -> Bool
+esABB = recAB (\i r d ri rd -> 
+    (if esNil i then True else raiz i < r) && 
+    (if esNil d then True else raiz d > r) && 
+    ri && rd) True
+
+raiz :: AB a -> a
+raiz (Bin i r d) = r
+
+-- Aun falta ver que algo como esto (Bin (Bin Nil 4 (Bin Nil 80 Nil)) 5 (Bin Nil 7 Nil))
+-- da true cuando debería dar false. Habría que ver que el mayor del subarbol izquierdo no
+-- sea mayor que la raiz, algo parecido con el izquierdo
+
+-- V
+
+{-
+En el caso donde se usa foldAB es porque la función no requiere procesar el valor
+de la subestructuras, justo en el caso de ABB si es necesario porque necesitamos los
+valores de las raices de los subarboles izquierdo y derecho.
+-}
+
