@@ -102,8 +102,8 @@ cantNodos = foldAB (\ri r rd -> 1 + ri + rd) 0
 
 -- III
 
-mejorSegún :: (a -> a -> Bool) -> AB a -> a
-mejorSegún f (Bin i r d) = foldAB (\ri r rd -> cmp (cmp r rd) ri) r (Bin i r d)
+mejorSegun :: (a -> a -> Bool) -> AB a -> a
+mejorSegun f (Bin i r d) = foldAB (\ri r rd -> cmp (cmp r rd) ri) r (Bin i r d)
     where cmp x y = if f x y then x else y
 
 -- cmp :: (a -> a -> Bool) -> AB a -> a -> a
@@ -117,16 +117,12 @@ mejorSegún f (Bin i r d) = foldAB (\ri r rd -> cmp (cmp r rd) ri) r (Bin i r d)
 
 esABB :: Ord a => AB a -> Bool
 esABB = recAB (\i r d ri rd -> 
-    (if esNil i then True else raiz i < r) && 
-    (if esNil d then True else raiz d > r) && 
+    (if esNil i then True else raiz i < r && (mejorSegun (>) i) <= r) && 
+    (if esNil d then True else raiz d > r && (mejorSegun (<) d) > r) && 
     ri && rd) True
 
 raiz :: AB a -> a
 raiz (Bin i r d) = r
-
--- Aun falta ver que algo como esto (Bin (Bin Nil 4 (Bin Nil 80 Nil)) 5 (Bin Nil 7 Nil))
--- da true cuando debería dar false. Habría que ver que el mayor del subarbol izquierdo no
--- sea mayor que la raiz, algo parecido con el izquierdo
 
 -- V
 
