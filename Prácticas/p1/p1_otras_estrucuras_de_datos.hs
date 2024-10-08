@@ -132,3 +132,38 @@ de la subestructuras, justo en el caso de ABB si es necesario porque necesitamos
 valores de las raices de los subarboles izquierdo y derecho.
 -}
 
+-- Ejercicio 15
+--I
+
+data RoseTree a = Rose a [RoseTree a]
+
+-- II
+
+foldRose :: (a -> [b] -> b) -> RoseTree a -> b
+foldRose cRose (Rose r rs) = cRose r (map rec rs)
+    where rec = foldRose cRose
+
+-- III
+--a)
+
+hojas :: RoseTree a -> [a]
+hojas = foldRose (\r rec -> if null rec then [r] else concat rec)
+
+
+-- distancias :: RoseTree a -> [(a, Int)]
+-- distancias rose = foldRose (\r rec n -> if null rec then [(r,n)] else (r,n):concat (rec (n+1))) rose 0
+
+--b)
+
+distancias :: RoseTree a -> [Integer]
+distancias = foldRose (\r rec -> if null rec then [0] else map (+1) (concat rec))
+
+
+--c)
+
+alturaRose :: RoseTree a -> Integer
+alturaRose = foldRose (\r rec -> if null rec then 1 else 1 + maximum rec)
+
+
+
+
