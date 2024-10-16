@@ -53,6 +53,9 @@ esta. En caso de que esté, entrega true, sino false.
 (Foldable t, Eq a) => a -> t a -> Bool
 -}
 
+take' :: Int -> [a] -> [a]
+take' n xs = foldr (\x rec n -> if n == 0 then [] else x: rec (n-1)) (const []) xs n
+
 --Ejercicio 2
 
 --a
