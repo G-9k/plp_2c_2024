@@ -22,4 +22,4 @@ sublista(S, L) :- prefijo(P, L), sufijo(S, P).
 % VI
 % pertenece(?X, +L)
 pertenece(X, [X|_]).
-pertenece(X, [E|L]) :- X \= E, pertenece(X, L).
+pertenece(X, [_|L]) :- pertenece(X, L).
