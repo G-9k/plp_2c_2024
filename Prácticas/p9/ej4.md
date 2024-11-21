@@ -1,0 +1,61 @@
+# Ejercicio 4
+
+## a) [:x | x + 1] value: 2
+
+X vale 2, entonces el bloque devuelve 3.
+
+## b) [|x| x := 10. x + 12] value
+
+Crea una variable local dentro del bloque, le asigna 10, luego le suma 12. Entonces al final retorna 22.
+
+## c) [:x :y | |z| z := x + y] value: 1 value: 2
+
+Es un bloque que recibe dos parametros 'x' e 'y', se los pasamos usando value, y dentro del código se crea una variable local 'z' al cual se le asigna la suma de los valores pasados por parametro. Retorna 3
+
+## d) [:x :y | x + 1] value: 1
+
+Falla, espera dos valores, solo se le envía uno, no importa que dentro del código solo utilice el parametro enviado. Si le definis que recibe dos valores, enviale dos valores.
+
+Retorna:
+```smalltalk
+numArgsError: numArgsForInvocation
+
+	ArgumentsCountMismatch signalExpectedArgumentsCount: numArgs calledArgumentsCount: numArgsForInvocation
+```
+
+## e) [:x | [:y | x + 1]] value: 2
+
+Esto no falla, porque el closure inicial solo espera un valor, el resultado será otro closure que espera un valor y cuyo codigo es 2 + 1, por lo tanto sin importar lo que se le pase, retornaría 3.
+
+Retorna: `[:y | 2 + 1]`
+
+### Error
+No retorna eso, probando con smalltalk, lo que en realidad retorna es `[:y | x + 1]`, aun no reemplazó el 'x' por un 2, sin embargo cuando este closure reciba algún 'y', retornará `x + 1`, y eso se lo devuelve al closure de la 'x' el cual había recibido 2, entonces lo reemplaza, por lo que al final igual si es correcto que retornaría 3 si se le agregara un value más, sin embargo, hay que ponerlo entre parentesis para que funcione, de esta forma: `([:x | [:y | x + 1]] value: 2) value: 20.`  
+
+Entonces verdadero retorno: `[:y | x + 1]` 
+
+
+## f) [[:x | x + 1]] value
+
+Retorna el closure: `[:x | x + 1]`. Esto es algo así como anidar closures, el de mas afuera no espera nada.
+
+## g) [:x :y :z | x + y + z] valueWithArguments: #(1 2 3)
+
+La primera vez que veo el mensaje 'valueWithArguments:', pero imagino que es equivalente a ponerle los tres values. Entonces debería retornar 6.  
+
+Efectivamente retorna 6. Equivalente a `[:x :y :z | x + y + z] value: 1 value: 2 value: 3.`
+
+
+## h) [ |z| z := 10. [:x | x + z]] value value: 10
+
+Creo que falla por falta de parentesis, de esta forma quiza creería que el primer closure se le envía 2 parámetros.
+
+### Error
+No falla, el primer value retorna el segundo closure con el 'z' local ya instanciado para cuando se resuelva el bloque que espera 'x'. Cuando recibe el 10, retorna `10 + z`, pero eso es en un contexto donde 'z' vale 10. Entonces al ejecutarse finalmente el primer value, **retorna 20**.
+
+## ¿Cuál es la diferencia entre [|x y z| x + 1] y [:x :y :z| x + 1]?
+
+El primero declara 3 variables y retorna un error si se ejecuta con value, ya que nunca se define el valor de 'x' entonces tira el error de que el mensaje '+' se le envía a 'nil'. No espera argumentos.
+
+El segundo si espera argumentos, espera 3, y se lo puede hacer funcionar si se los envía. Retorna la suma entre lo que sea que le hayas enviado a 'x' + 1.
+
