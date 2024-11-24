@@ -26,8 +26,7 @@ borrar(E, [E|Xs], R) :- borrar(E, Xs, R).
 % III
 % sacarDuplicados(+L1, -L2)
 sacarDuplicados([], []).
-sacarDuplicados([X|XS], [X|LR]) :- member(X, XS), borrar(X, XS, L), sacarDuplicados(L, LR).
-sacarDuplicados([X|XS], [X|LR]) :- not(member(X, XS)), sacarDuplicados(XS, LR).
+sacarDuplicados([X|XS], [X|LR]) :- borrar(X, XS, L), sacarDuplicados(L, LR).
 
 % IV
 % permutacion(+L1, -L2)
