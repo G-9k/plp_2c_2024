@@ -75,3 +75,5 @@ max_count([(_,Count)|T], CurrentMax, MaxCount) :-
 % remove_all(X, [H|T], [H|Result]) :-
 %     X \= H,
 %     remove_all(X, T, Result).
+
+
